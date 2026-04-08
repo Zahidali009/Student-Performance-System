@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Performance System</title>
+    <title>AI Based Student Performance Prediction System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Student Performance System Based on AI </h1>
+        <h1>AI Based Student Performance Prediction System</h1>
         <div class="subtitle">Enter student details </div>
     </header>
 
@@ -18,44 +19,42 @@
             <h2>Enter Your Details</h2>
             <div class="note">Please fill out the fields below. Required fields are marked.</div>
 
-            <form action="" onsubmit="event.preventDefault(); alert('Form submitted (demo)')">
+            <form action="" onsubmit="event.preventDefault(); validateAndSubmit()">
                 <div class="grid">
 
                     <div>
-                        <label for="name">Name <span style="color:#d34">*</span></label>
+                        <label for="name"><i class="fas fa-user"></i> Name <span style="color:#d34">*</span></label>
                         <input id="name" name="name" type="text" placeholder="Full name" required>
                     </div>
 
                     <div>
-                        <label for="roll">Roll No <span style="color:#d34">*</span></label>
+                        <label for="roll"><i class="fas fa-id-card"></i> Roll No <span style="color:#d34">*</span></label>
                         <input id="roll" name="roll" type="number" placeholder="e.g. 12345" required>
                     </div>
 
                     <div>
-                        <label for="prevInternal">Prev Sem Internal</label>
+                        <label for="prevInternal"><i class="fas fa-book"></i> Prev Sem Internal</label>
                         <input id="prevInternal" name="prevInternal" type="number" min="0" max="320" placeholder="e.g. 210">
                     </div>
 
                     <div>
-                        <label for="prevExternal">Prev Sem External</label>
+                        <label for="prevExternal"><i class="fas fa-graduation-cap"></i> Prev Sem External</label>
                         <input id="prevExternal" name="prevExternal" type="number" min="0" max="480" placeholder="e.g. 320">
                     </div>
 
                     <div>
-                        <label for="attendance">Attendance (%)</label>
+                        <label for="attendance"><i class="fas fa-calendar-check"></i> Attendance (%)</label>
                         <input id="attendance" name="attendance" type="number" min="0" max="100" placeholder="e.g. 85">
                     </div>
 
                     <!-- Removed Individual internal/external marks inputs (using previous-semester totals instead) -->
 
                         <div>
-                            <label for="study">Study Hours / day</label>
-                            <input id="study" name="study" type="number" min="0" step="0.5" placeholder="e.g. 3">
-                        </div>
-
+                            <label for="study"><i class="fas fa-clock"></i> Study Hours / day</label>
+                        <input id="study" name="study" type="number" min="0" max="12" step="0.5" placeholder="e.g. 3">
                     <div class="full">
                         <div class="actions">
-                            <button class="ghost" type="reset">Reset</button>
+                            <button class="ghost" type="reset"><i class="fas fa-undo"></i> Reset</button>
                         </div>
                     </div>
                 </div>
@@ -67,14 +66,68 @@
                 <input id="trainFile" type="file" accept=".csv" style="padding:6px;">
                 <button id="uploadTrainBtn" class="ghost" type="button">Load & Train</button>
 
-                <button id="trainBtn" class="primary" type="button">Train Model (sample)</button>
-                <button id="predictBtn" class="ghost" type="button">Predict from Inputs</button>
+                <button id="trainBtn" class="primary" type="button"><i class="fas fa-brain"></i> Train Model (sample)</button>
+                <button id="predictBtn" class="ghost" type="button"><i class="fas fa-chart-line"></i> Predict from Inputs</button>
 
                 <div id="trainStatus" style="color:var(--muted); font-size:13px">Model not trained</div>
                 <div id="dataInfo" style="margin-left:12px; color:var(--muted); font-size:13px">Fields: prevInternal, prevExternal, attendance, internal, external, study, finalPercent</div>
                 <div style="margin-left:auto; display:flex; gap:12px; align-items:center; font-weight:600">
-                    <div>Prediction: <span id="prediction">—</span></div>
-                    <div>Status: <span id="passStatus" style="font-weight:700">—</span></div>
+                    <div>Prediction: <span id="prediction" style="color: var(--primary-blue); font-weight:900; font-size:18px; background: rgba(74,144,226,0.15); padding: 8px 12px; border-radius: 8px; border: 2px solid var(--primary-blue); box-shadow: 0 4px 12px rgba(74,144,226,0.2);">—</span></div>
+                    <div>Grade: <span id="grade" style="font-weight:700; background: rgba(155,89,182,0.1); padding: 4px 8px; border-radius: 6px;">—</span></div>
+                    <div>Performance: <span id="performanceLevel" style="font-weight:700; background: rgba(74,144,226,0.1); padding: 4px 8px; border-radius: 6px;">—</span></div>
+                    <div>Status: <span id="passStatus" style="font-weight:700; background: rgba(80,200,120,0.1); padding: 4px 8px; border-radius: 6px;">—</span></div>
+                </div>
+            </div>
+            <div class="result-panel">
+                <div class="result-summary">
+                    <div class="result-card">
+                        <div class="result-card-title">Result Snapshot</div>
+                        <div class="result-pill"><span>Percentage</span><strong id="predictionMini" style="font-size:20px; font-weight:900;">—</strong></div>
+                        <div class="result-pill"><span>Grade</span><strong id="gradeMini">—</strong></div>
+                        <div class="result-pill"><span>Status</span><strong id="statusMini">—</strong></div>
+                        <div class="result-pill"><span>Performance</span><strong id="performanceLevelMini">—</strong></div>
+                    </div>
+                    <div class="result-card result-card-highlight">
+                        <div class="result-card-title">Quick Highlight</div>
+                        <div id="resultHighlightText" class="result-highlight-note">Predict to see the result summary and performance chart.</div>
+                    </div>
+                </div>
+                <div class="result-chart">
+                    <div class="chart-header">Prediction Overview</div>
+                    <div class="bar-row">
+                        <span class="bar-label">Predicted</span>
+                        <div class="bar-track"><div id="barPred" class="bar-fill predicted"></div></div>
+                        <span id="barPredValue" class="bar-value">0%</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Attendance</span>
+                        <div class="bar-track"><div id="barAttendance" class="bar-fill attendance"></div></div>
+                        <span id="barAttendanceValue" class="bar-value">0%</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Study Hours</span>
+                        <div class="bar-track"><div id="barStudy" class="bar-fill study"></div></div>
+                        <span id="barStudyValue" class="bar-value">0h</span>
+                    </div>
+                    <div class="chart-header" style="margin-top:24px">Marks Breakdown</div>
+                    <div class="marks-chart-row">
+                        <div class="marks-pie-wrap">
+                            <div class="marks-pie" id="marksPie"></div>
+                            <div class="marks-pie-center"><span id="marksPieLabel">0 / 0</span></div>
+                        </div>
+                        <div class="marks-bar-list">
+                            <div class="mark-row">
+                                <span>Internal</span>
+                                <div class="bar-track"><div id="marksBarInternal" class="bar-fill internal"></div></div>
+                                <span id="marksInternalValue" class="bar-value">0</span>
+                            </div>
+                            <div class="mark-row">
+                                <span>External</span>
+                                <div class="bar-track"><div id="marksBarExternal" class="bar-fill attendance"></div></div>
+                                <span id="marksExternalValue" class="bar-value">0</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
