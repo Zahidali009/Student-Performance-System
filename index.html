@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Student Performance System</h1>
+        <div class="subtitle">Enter student details </div>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Enter Your Details</h2>
+            <div class="note">Please fill out the fields below. Required fields are marked.</div>
+
+            <form action="" onsubmit="event.preventDefault(); alert('Form submitted (demo)')">
+                <div class="grid">
+
+                    <div>
+                        <label for="name">Name <span style="color:#d34">*</span></label>
+                        <input id="name" name="name" type="text" placeholder="Full name" required>
+                    </div>
+
+                    <div>
+                        <label for="roll">Roll No <span style="color:#d34">*</span></label>
+                        <input id="roll" name="roll" type="number" placeholder="e.g. 12345" required>
+                    </div>
+
+                    <div>
+                        <label for="prevInternal">Prev Sem Internal</label>
+                        <input id="prevInternal" name="prevInternal" type="number" min="0" max="320" placeholder="e.g. 210">
+                    </div>
+
+                    <div>
+                        <label for="prevExternal">Prev Sem External</label>
+                        <input id="prevExternal" name="prevExternal" type="number" min="0" max="480" placeholder="e.g. 320">
+                    </div>
+
+                    <div>
+                        <label for="attendance">Attendance (%)</label>
+                        <input id="attendance" name="attendance" type="number" min="0" max="100" placeholder="e.g. 85">
+                    </div>
+
+                    <!-- Removed Individual internal/external marks inputs (using previous-semester totals instead) -->
+
+                        <div>
+                            <label for="study">Study Hours / day</label>
+                            <input id="study" name="study" type="number" min="0" step="0.5" placeholder="e.g. 3">
+                        </div>
+
+                    <div class="full">
+                        <div class="actions">
+                            <button class="ghost" type="reset">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <hr style="margin:18px 0; border:none; border-top:1px solid #eef0fb">
+            <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+                <label for="trainFile" style="margin:0; font-size:14px; color:var(--muted)">Upload training CSV</label>
+                <input id="trainFile" type="file" accept=".csv" style="padding:6px;">
+                <button id="uploadTrainBtn" class="ghost" type="button">Load & Train</button>
+
+                <button id="trainBtn" class="primary" type="button">Train Model (sample)</button>
+                <button id="predictBtn" class="ghost" type="button">Predict from Inputs</button>
+
+                <div id="trainStatus" style="color:var(--muted); font-size:13px">Model not trained</div>
+                <div id="dataInfo" style="margin-left:12px; color:var(--muted); font-size:13px">Fields: prevInternal, prevExternal, attendance, internal, external, study, finalPercent</div>
+                <div style="margin-left:auto; display:flex; gap:12px; align-items:center; font-weight:600">
+                    <div>Prediction: <span id="prediction">—</span></div>
+                    <div>Status: <span id="passStatus" style="font-weight:700">—</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="predictor.js"></script>
+    
+</body>
+</html>
