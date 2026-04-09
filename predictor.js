@@ -368,62 +368,48 @@ async function predict(model){
   const pct = Math.min(100, Math.max(0, regVal*100));
   const grade = calculateGrade(pct);
   const performanceLevel = getPerformanceLevel(pct);
-  document.getElementById('prediction').textContent = `${pct.toFixed(1)} %`;
-  document.getElementById('grade').textContent = grade;
-  const perfEl = document.getElementById('performanceLevel');
-  if (perfEl) perfEl.textContent = performanceLevel;
 
   let statusText = '';
   if(probTensor){
     const probVal = (await probTensor.array())[0][0];
-    const passEl = document.getElementById('passStatus');
-    if(passEl){
-      if(prevTotalPercent > 0 && prevTotalPercent < PREV_OVERRIDE_THRESHOLD){
-        statusText = 'Low prior score — review closely';
-        passEl.style.color = '#ef4444';
-      } else {
-        if(probVal >= 0.75){
-          statusText = 'Very likely to pass';
-          passEl.style.color = '#16a34a';
-        } else if(probVal >= 0.5){
-          statusText = 'Likely to pass';
-          passEl.style.color = '#16a34a';
-        } else if(probVal >= 0.35){
-          statusText = 'Borderline';
-          passEl.style.color = '#f59e0b';
-        } else {
-          statusText = 'Unlikely to pass';
-          passEl.style.color = '#ef4444';
-        }
-      }
-      passEl.textContent = statusText;
-    }
-  } else {
-    const passEl = document.getElementById('passStatus');
-    if(passEl){
-      if(prevTotalPercent > 0 && prevTotalPercent < PREV_OVERRIDE_THRESHOLD){
-        statusText = 'Low prior score — review closely';
-        passEl.style.color = '#ef4444';
-      } else if(pct >= PASS_THRESHOLD){
+    if(prevTotalPercent > 0 && prevTotalPercent < PREV_OVERRIDE_THRESHOLD){
+      statusText = 'Low prior score — review closely';
+    } else {
+      if(probVal >= 0.75){
+        statusText = 'Very likely to pass';
+      } else if(probVal >= 0.5){
         statusText = 'Likely to pass';
-        passEl.style.color = '#16a34a';
+      } else if(probVal >= 0.35){
+        statusText = 'Borderline';
       } else {
         statusText = 'Unlikely to pass';
-        passEl.style.color = '#ef4444';
       }
-      passEl.textContent = statusText;
+    }
+  } else {
+    if(prevTotalPercent > 0 && prevTotalPercent < PREV_OVERRIDE_THRESHOLD){
+      statusText = 'Low prior score — review closely';
+    } else if(pct >= PASS_THRESHOLD){
+      statusText = 'Likely to pass';
+    } else {
+      statusText = 'Unlikely to pass';
     }
   }
 
-  updateResultVisualization(
-    pct,
-    Number(document.getElementById('attendance').value) || 0,
-    Number(document.getElementById('study').value) || 0,
-    Number(document.getElementById('prevInternal').value) || 0,
-    Number(document.getElementById('prevExternal').value) || 0,
+  const resultData = {
+    name: document.getElementById('name').value.trim(),
+    roll: document.getElementById('roll').value.trim(),
+    percentage: pct.toFixed(1),
     grade,
-    statusText
-  );
+    performance: performanceLevel,
+    status: statusText,
+    attendance: document.getElementById('attendance').value || '0',
+    study: document.getElementById('study').value || '0',
+    prevInternal: document.getElementById('prevInternal').value || '0',
+    prevExternal: document.getElementById('prevExternal').value || '0'
+  };
+
+  localStorage.setItem('predictionResults', JSON.stringify(resultData));
+  window.location.href = 'result.html';
 
   if(Array.isArray(preds)) preds.forEach(t=>t.dispose());
 }
@@ -590,6 +576,5 @@ function validateAndSubmit() {
     alert('Form submitted successfully! (Demo)');
   }
 }
-
 
 
