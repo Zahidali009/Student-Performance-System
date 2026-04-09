@@ -1,1 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Prediction Result</h1>
+        <div class="subtitle">Your score prediction summary</div>
+    </header>
 
+    <main class="container">
+        <section class="card">
+            <h2>Result Summary</h2>
+            <div class="note" id="resultNote">Loading prediction results...</div>
+
+            <div class="result-summary" id="resultSummary" style="margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;">
+                <div class="result-pill"><span>Prediction</span><strong id="predictionValue">—</strong></div>
+                <div class="result-pill"><span>Grade</span><strong id="gradeValue">—</strong></div>
+                <div class="result-pill"><span>Performance</span><strong id="performanceValue">—</strong></div>
+                <div class="result-pill"><span>Status</span><strong id="statusValue">—</strong></div>
+                <div class="result-pill"><span>Attendance</span><strong id="attendanceValue">—</strong></div>
+                <div class="result-pill"><span>Study Hours</span><strong id="studyValue">—</strong></div>
+            </div>
+
+            <div class="result-chart" style="margin-top:24px;">
+                <div class="chart-header">Prediction Overview</div>
+                <div class="bar-row">
+                    <span class="bar-label">Predicted</span>
+                    <div class="bar-track"><div id="barPred" class="bar-fill predicted"></div></div>
+                    <span id="barPredValue" class="bar-value">0%</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Attendance</span>
+                    <div class="bar-track"><div id="barAttendance" class="bar-fill attendance"></div></div>
+                    <span id="barAttendanceValue" class="bar-value">0%</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Study Hours</span>
+                    <div class="bar-track"><div id="barStudy" class="bar-fill study"></div></div>
+                    <span id="barStudyValue" class="bar-value">0h</span>
+                </div>
+                <div class="chart-header" style="margin-top:24px">Marks Breakdown</div>
+                <div class="marks-chart-row">
+                    <div class="marks-pie-wrap">
+                        <div class="marks-pie" id="marksPie"></div>
+                        <div class="marks-pie-center" id="marksPieLabel">0 / 0</div>
+                    </div>
+                    <div class="marks-bar-list">
+                        <div class="mark-row">
+                            <span>Internal</span>
+                            <div class="bar-track"><div id="marksBarInternal" class="bar-fill internal"></div></div>
+                            <span id="marksInternalValue" class="bar-value">0</span>
+                        </div>
+                        <div class="mark-row">
+                            <span>External</span>
+                            <div class="bar-track"><div id="marksBarExternal" class="bar-fill attendance"></div></div>
+                            <span id="marksExternalValue" class="bar-value">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="full actions" style="justify-content:flex-end; margin-top:24px;">
+                <button class="ghost" type="button" onclick="window.location.href='index.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Input Page
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function loadPredictionResults() {
+            const raw = localStorage.getItem('predictionResults');
+            if (!raw) return null;
+            try {
+                return JSON.parse(raw);
+            } catch (err) {
+                return null;
+            }
+        }
+
+        function updateChartVisualization(data) {
+            const pct = Number(data.percentage) || 0;
+            const attendance = Number(data.attendance) || 0;
+            const study = Number(data.study) || 0;
+            const internal = Number(data.prevInternal) || 0;
+            const external = Number(data.prevExternal) || 0;
+            const totalMarks = internal + external;
+            const pieInternal = totalMarks ? Math.round((internal / totalMarks) * 100) : 0;
+
+            const safePct = Math.min(100, Math.max(0, pct));
+            const safeAttendance = Math.min(100, Math.max(0, attendance));
+            const safeStudy = Math.min(100, Math.max(0, study * 10));
+            const safeInternal = Math.min(100, Math.max(0, (internal / 320) * 100));
+            const safeExternal = Math.min(100, Math.max(0, (external / 480) * 100));
+
+            const predBar = document.getElementById('barPred');
+            const attBar = document.getElementById('barAttendance');
+            const studyBar = document.getElementById('barStudy');
+            const predValue = document.getElementById('barPredValue');
+            const attValue = document.getElementById('barAttendanceValue');
+            const studyValue = document.getElementById('barStudyValue');
+            const marksPie = document.getElementById('marksPie');
+            const marksPieLabel = document.getElementById('marksPieLabel');
+            const internalValue = document.getElementById('marksInternalValue');
+            const externalValue = document.getElementById('marksExternalValue');
+            const marksInternalBar = document.getElementById('marksBarInternal');
+            const marksExternalBar = document.getElementById('marksBarExternal');
+
+            if (predBar) predBar.style.width = `${safePct}%`;
+            if (attBar) attBar.style.width = `${safeAttendance}%`;
+            if (studyBar) studyBar.style.width = `${safeStudy}%`;
+            if (marksInternalBar) marksInternalBar.style.width = `${safeInternal}%`;
+            if (marksExternalBar) marksExternalBar.style.width = `${safeExternal}%`;
+            if (predValue) predValue.textContent = `${safePct.toFixed(1)}%`;
+            if (attValue) attValue.textContent = `${safeAttendance.toFixed(0)}%`;
+            if (studyValue) studyValue.textContent = `${study.toFixed(1)}h`;
+            if (marksPie) marksPie.style.background = `conic-gradient(var(--warning-orange) 0% ${pieInternal}%, var(--danger-red) ${pieInternal}% 100%)`;
+            if (marksPieLabel) marksPieLabel.textContent = `${internal} / ${external}`;
+            if (internalValue) internalValue.textContent = `${internal}`;
+            if (externalValue) externalValue.textContent = `${external}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const data = loadPredictionResults();
+            const note = document.getElementById('resultNote');
+            const summary = document.getElementById('resultSummary');
+
+            if (!data) {
+                note.textContent = 'No prediction results were found. Please return to the input page and predict again.';
+                summary.style.display = 'none';
+                return;
+            }
+
+            document.getElementById('predictionValue').textContent = data.percentage ? `${data.percentage}%` : '—';
+            document.getElementById('gradeValue').textContent = data.grade || '—';
+            document.getElementById('performanceValue').textContent = data.performance || '—';
+            document.getElementById('statusValue').textContent = data.status || '—';
+            document.getElementById('attendanceValue').textContent = data.attendance ? `${data.attendance}%` : '—';
+            document.getElementById('studyValue').textContent = data.study ? `${data.study}h` : '—';
+
+            updateChartVisualization(data);
+            note.textContent = 'Prediction results are shown below.';
+        });
+    </script>
+</body>
+</html>
