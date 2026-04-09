@@ -1,267 +1,83 @@
-:root{
-    --bg1: #eef4ff;
-    --accent: #5c7dff;
-    --accent-light: #92a2ff;
-    --muted: #5f6d96;
-    --card: rgba(255,255,255,0.96);
-    --primary-blue: #3d5afe;
-}
-*{box-sizing: border-box}
-body{
-    margin:0;
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    background: linear-gradient(180deg, #eef4ff 0%, #f5f8ff 45%, #fcfdff 100%);
-    color:#1f1f2e;
-    -webkit-font-smoothing:antialiased;
-}
-header{
-    padding:28px 16px;
-    text-align:center;
-    background: linear-gradient(135deg, rgba(93,125,255,0.16) 0%, rgba(61,90,254,0.14) 55%, rgba(87,219,231,0.12) 100%);
-    border-bottom: 2px solid rgba(93,125,255,0.14);
-    position: relative;
-}
-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--primary-blue), var(--accent));
-}
-header h1{margin:0; font-weight:700; letter-spacing:0.2px}
 
-.container{
-    max-width:820px;
-    margin:32px auto;
-    padding:20px;
-}
-.card{
-    background: linear-gradient(145deg, rgba(242,247,255,0.96) 0%, rgba(235,243,255,0.95) 48%, rgba(250,252,255,0.96) 100%);
-    border-radius:20px;
-    padding:28px;
-    box-shadow: 0 18px 45px rgba(31,31,46,0.08);
-    border: 1px solid rgba(93,125,255,0.14);
-    position: relative;
-    overflow: hidden;
-}
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-blue), var(--accent));
-}
-.subtitle{color:var(--muted); margin-top:6px; margin-bottom:18px}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Based Student Performance Prediction System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>AI Based Student Performance Prediction System</h1>
+        <div class="subtitle">Enter student details </div>
+    </header>
 
-form .grid > div{
-    margin-bottom:8px;
-}
-label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px; font-weight:500}
-label i{margin-right:6px; opacity:0.8;}
+    <main class="container">
+        <section class="card">
+            <h2>Enter Your Details</h2>
+            <div class="note">Please fill out the fields below. Required fields are marked.</div>
 
-input[type=text], input[type=number], input[type=range]{
-    width:100%;
-    padding:10px 12px;
-    border-radius:10px;
-    border:2px solid transparent;
-    background:linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
-    font-size:14px;
-    outline:none;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-input:focus{
-    box-shadow:0 6px 18px rgba(61,90,254,0.2);
-    border-color:var(--accent);
-    transform: translateY(-2px);
-}
+            <form action="" onsubmit="event.preventDefault(); validateAndSubmit()">
+                <div class="grid">
 
-input[id="name"],
-input[id="roll"],
-input[id="prevInternal"],
-input[id="prevExternal"],
-input[id="attendance"],
-input[id="study"] {
-    border-left: 4px solid var(--accent);
-}
-.full{grid-column:1/-1}
+                    <div>
+                        <label for="name"><i class="fas fa-user"></i> Name <span style="color:#d34">*</span></label>
+                        <input id="name" name="name" type="text" placeholder="Full name" required>
+                    </div>
 
-.actions{display:flex; gap:12px; align-items:center; margin-top:18px;}
-button.primary, button.ghost{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-}
-button.primary{
-    background: linear-gradient(135deg, var(--primary-blue), var(--accent));
-    color: white;
-    border: none;
-    padding:10px 18px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:600;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 25px rgba(61,90,254,0.18);
-}
-button.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(61,90,254,0.28);
-}
+                    <div>
+                        <label for="roll"><i class="fas fa-id-card"></i> Roll No <span style="color:#d34">*</span></label>
+                        <input id="roll" name="roll" type="number" placeholder="e.g. 12345" required>
+                    </div>
 
-button.ghost{
-    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(238,244,255,0.95) 100%);
-    border:2px solid var(--primary-blue);
-    padding:10px 18px;
-    border-radius:10px;
-    cursor:pointer;
-    color: var(--primary-blue);
-    font-weight:500;
-    transition: all 0.3s ease;
-}
-button.ghost:hover {
-    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent) 100%);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(74,144,226,0.3);
-}
+                    <div>
+                        <label for="prevInternal"><i class="fas fa-book"></i> Prev Sem Internal</label>
+                        <input id="prevInternal" name="prevInternal" type="number" min="0" max="320" placeholder="e.g. 210">
+                    </div>
 
-.note{font-size:13px; color:var(--muted); margin-top:12px}
+                    <div>
+                        <label for="prevExternal"><i class="fas fa-graduation-cap"></i> Prev Sem External</label>
+                        <input id="prevExternal" name="prevExternal" type="number" min="0" max="480" placeholder="e.g. 320">
+                    </div>
 
-.result-panel{
-    margin-top:28px;
-    padding:22px;
-    border-radius:18px;
-    background: rgba(238,244,255,0.92);
-    border:1px solid rgba(93,125,255,0.16);
-    box-shadow: 0 18px 40px rgba(93,125,255,0.08);
-}
-.result-summary{
-    display:flex;
-    gap:18px;
-    flex-wrap:wrap;
-}
-.result-card{
-    flex:1 1 260px;
-    min-width:220px;
-    background:#fff;
-    border-radius:18px;
-    padding:18px;
-    border:1px solid rgba(31,31,46,0.08);
-    box-shadow: 0 12px 28px rgba(31,31,46,0.06);
-}
-.result-card-highlight{
-    background: linear-gradient(135deg, rgba(74,144,226,0.08), rgba(74,144,226,0.15));
-    border-color: rgba(74,144,226,0.22);
-}
-.result-card-title{
-    font-size:13px;
-    font-weight:700;
-    color:var(--muted);
-    margin-bottom:12px;
-    text-transform:uppercase;
-    letter-spacing:0.8px;
-}
-.result-pill{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    background: rgba(248,249,255,0.95);
-    padding:12px 14px;
-    border-radius:14px;
-    margin-bottom:10px;
-    border:1px solid rgba(74,144,226,0.12);
-    color: #1f1f2e;
-}
-.result-pill strong{
-    font-size:18px;
-}
-.result-highlight-note{
-    font-size:14px;
-    line-height:1.6;
-    color:#1f1f2e;
-    font-weight:600;
-}
-.result-chart{margin-top:22px;}
-.chart-header{
-    font-size:14px;
-    font-weight:700;
-    margin-bottom:14px;
-    color:var(--muted);
-}
-.bar-row{
-    display:grid;
-    grid-template-columns:120px 1fr 60px;
-    gap:12px;
-    align-items:center;
-    margin-bottom:12px;
-}
-.bar-label{font-size:13px; color:var(--muted);}
-.bar-track{
-    background:#eef2ff;
-    border-radius:999px;
-    height:12px;
-    overflow:hidden;
-}
-.bar-fill{
-    height:100%;
-    width:0;
-    border-radius:999px;
-    transition:width 0.45s ease;
-}
-.bar-fill.predicted{background: linear-gradient(90deg,var(--primary-blue), var(--accent));}
-.bar-fill.attendance{background: linear-gradient(90deg,var(--accent-light), var(--accent));}
-.bar-fill.study{background: linear-gradient(90deg,#a3b5ff, var(--primary-blue));}
-.bar-fill.internal{background: linear-gradient(90deg, #97a8ff, var(--accent));}
-.bar-value{font-size:13px; font-weight:700; color:#1f1f2e; text-align:right;}
+                    <div>
+                        <label for="attendance"><i class="fas fa-calendar-check"></i> Attendance (%)</label>
+                        <input id="attendance" name="attendance" type="number" min="0" max="100" placeholder="e.g. 85">
+                    </div>
 
-.marks-chart-row{
-    display:grid;
-    grid-template-columns:140px 1fr;
-    gap:18px;
-    align-items:center;
-    margin-top:18px;
-}
-.marks-pie-wrap{
-    position:relative;
-    width:140px;
-    height:140px;
-}
-.marks-pie{
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    background: conic-gradient(var(--primary-blue) 0%, var(--accent) 55%, var(--accent) 100%);
-    transition: background 0.35s ease;
-}
-.marks-pie-center{
-    position:absolute;
-    inset: 30px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:50%;
-    background: #fff;
-    box-shadow: inset 0 0 0 6px rgba(255,255,255,0.9);
-    font-weight:700;
-    color:#1f1f2e;
-    text-align:center;
-    font-size:14px;
-}
-.marks-bar-list{display:flex; flex-direction:column; gap:12px;}
-.mark-row{display:grid; grid-template-columns:90px 1fr 60px; gap:12px; align-items:center;}
-.mark-row span{font-size:13px; color:var(--muted);}
+                    <!-- Removed Individual internal/external marks inputs (using previous-semester totals instead) -->
 
-/* small helper adjustments previously inline */
-h2 { margin: 0 }
-.grid { margin-top: 16px }
+                    <div>
+                        <label for="study"><i class="fas fa-clock"></i> Study Hours / day</label>
+                        <input id="study" name="study" type="number" min="0" max="12" step="0.5" placeholder="e.g. 3">
+                    </div>
+                    <div class="full">
+                        <div class="actions">
+                            <button class="ghost" type="reset"><i class="fas fa-undo"></i> Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
-@media (max-width:640px){
-    .container{padding:12px}
-    .card{padding:18px}
-    form .grid{grid-template-columns:1fr}
-    label i{font-size:12px;}
-}
+            <hr style="margin:18px 0; border:none; border-top:1px solid #eef0fb">
+            <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+                <label for="trainFile" style="margin:0; font-size:14px; color:var(--muted)">Upload training CSV</label>
+                <input id="trainFile" type="file" accept=".csv" style="padding:6px;">
+                <button id="uploadTrainBtn" class="ghost" type="button">Load & Train</button>
+
+                <button id="trainBtn" class="primary" type="button"><i class="fas fa-brain"></i> Train Model (sample)</button>
+                <button id="predictBtn" class="ghost" type="button"><i class="fas fa-chart-line"></i> Predict from Inputs</button>
+
+                <div id="trainStatus" style="color:var(--muted); font-size:13px">Model not trained</div>
+                <div id="dataInfo" style="margin-left:12px; color:var(--muted); font-size:13px">Fields: prevInternal, prevExternal, attendance, internal, external, study, finalPercent</div>
+            </div>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="predictor.js"></script>
+    
+</body>
+</html>
